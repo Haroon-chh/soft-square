@@ -1,36 +1,53 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl mx-auto">
-      <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 mb-8 text-center p-2">
-        ✨ Activity Manager
-      </h1>
+  <div class="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-center mb-12">
+        <div class="bg-white/10 backdrop-blur-lg px-6 py-3 rounded-full inline-flex items-center">
+          <span class="material-icons text-amber-400 mr-3">schedule</span>
+          <h1 class="text-3xl font-light text-white">
+            Activity Manager
+          </h1>
+        </div>
+      </div>
       
       <ActivityForm @add-activity="addActivity" />
       
-      <div class="mt-8">
-        <div class="flex justify-between items-center mb-6">
-          <div class="text-sm font-medium text-gray-600">
-            {{ pendingCount }} pending, {{ completedCount }} completed
+      <div class="mt-10">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          <div class="flex items-center gap-3">
+            <div class="bg-white/10 backdrop-blur-lg px-4 py-2 rounded-lg text-white">
+              <span class="font-medium">{{ pendingCount }}</span> pending
+            </div>
+            <div class="bg-white/10 backdrop-blur-lg px-4 py-2 rounded-lg text-white">
+              <span class="font-medium">{{ completedCount }}</span> completed
+            </div>
           </div>
-          <div class="flex gap-2">
+          
+          <div class="bg-white/5 backdrop-blur-lg rounded-lg p-1 flex">
             <button 
               @click="filter = 'all'"
-              :class="['px-3 py-1 rounded-full text-sm', 
-                filter === 'all' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600']"
+              :class="[
+                'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300',
+                filter === 'all' ? 'bg-amber-500 text-slate-900' : 'text-white hover:bg-white/10'
+              ]"
             >
               All
             </button>
             <button 
               @click="filter = 'active'"
-              :class="['px-3 py-1 rounded-full text-sm', 
-                filter === 'active' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600']"
+              :class="[
+                'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300',
+                filter === 'active' ? 'bg-amber-500 text-slate-900' : 'text-white hover:bg-white/10'
+              ]"
             >
               Active
             </button>
             <button 
               @click="filter = 'completed'"
-              :class="['px-3 py-1 rounded-full text-sm', 
-                filter === 'completed' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600']"
+              :class="[
+                'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300',
+                filter === 'completed' ? 'bg-amber-500 text-slate-900' : 'text-white hover:bg-white/10'
+              ]"
             >
               Completed
             </button>
@@ -81,7 +98,7 @@ const saveActivities = () => {
 }
 
 const addActivity = (activity) => {
-  activities.value.push({
+  activities.value.unshift({
     id: Date.now(),
     title: activity,
     completed: false,

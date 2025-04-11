@@ -1,19 +1,24 @@
 <template>
-  <div class="bg-white shadow-lg rounded-xl p-6 backdrop-blur-lg bg-opacity-80">
-    <form @submit.prevent="handleSubmit" class="flex gap-4">
-      <input
-        v-model="newActivity"
-        type="text"
-        placeholder="✍️ Add new activity..."
-        class="flex-1 rounded-lg border-2 border-purple-100 px-4 py-2 text-gray-700 placeholder-gray-400 focus:border-purple-300 focus:ring-purple-300 transition-all duration-200"
-        required
-      />
+  <div class="bg-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/10">
+    <form @submit.prevent="handleSubmit" class="flex flex-col sm:flex-row gap-4">
+      <div class="relative flex-1">
+        <span class="material-icons absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400">
+          edit_calendar
+        </span>
+        <input
+          v-model="newActivity"
+          type="text"
+          placeholder="What do you need to accomplish?"
+          class="w-full bg-white/10 border-0 rounded-lg pl-12 pr-4 py-4 text-white placeholder-slate-400 focus:ring-2 focus:ring-amber-500/50 focus:bg-white/20 transition-all duration-300"
+          required
+        />
+      </div>
       <button
         type="submit"
-        class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-2 text-white shadow-lg hover:from-purple-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200"
+        class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-medium rounded-lg px-6 py-4 flex items-center justify-center gap-2 transition-all duration-300 shadow-lg shadow-amber-500/20 sm:w-auto w-full"
       >
-        <span class="material-icons text-xl">add_task</span>
-        <span>Add</span>
+        <span class="material-icons">add_task</span>
+        <span>Add Task</span>
       </button>
     </form>
   </div>
