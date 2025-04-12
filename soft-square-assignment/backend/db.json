@@ -1,28 +1,22 @@
 {
   "activities": [
     {
-      "id": "1",
-      "title": "Complete project documentation",
-      "completed": true,
-      "createdAt": "2023-07-10T10:00:00.000Z"
-    },
-    {
-      "id": "WZxV",
-      "title": "bgbg",
+      "id": "V6jB",
+      "title": "task 1",
       "completed": false,
-      "createdAt": "2025-04-12T09:56:10.058Z"
+      "createdAt": "2025-04-12T18:13:34.788Z"
     },
     {
-      "id": "34dO",
-      "title": "vcfdc",
+      "id": "UX4f",
+      "title": "task 2",
       "completed": false,
-      "createdAt": "2025-04-12T09:56:57.606Z"
+      "createdAt": "2025-04-12T18:13:39.864Z"
     },
     {
-      "id": "8fXi",
-      "title": "testing",
+      "id": "f7zq",
+      "title": "test",
       "completed": true,
-      "createdAt": "2025-04-12T18:03:57.358Z"
+      "createdAt": "2025-04-12T18:13:41.943Z"
     }
   ]
 }
