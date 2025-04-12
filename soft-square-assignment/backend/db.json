@@ -1,0 +1,22 @@
+{
+  "activities": [
+    {
+      "id": "1",
+      "title": "Complete project documentation",
+      "completed": true,
+      "createdAt": "2023-07-10T10:00:00.000Z"
+    },
+    {
+      "id": "WZxV",
+      "title": "bgbg",
+      "completed": false,
+      "createdAt": "2025-04-12T09:56:10.058Z"
+    },
+    {
+      "id": "34dO",
+      "title": "vcfdc",
+      "completed": false,
+      "createdAt": "2025-04-12T09:56:57.606Z"
+    }
+  ]
+}

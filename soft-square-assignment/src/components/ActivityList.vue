@@ -15,12 +15,11 @@
         :key="activity.id"
         class="group relative"
       >
-        <!-- Removed the absolute positioned element that might be overlapping -->
         <div class="p-6 flex items-center justify-between hover:bg-white/5 transition-all duration-300 border-l-4 border-transparent group-hover:border-amber-500" 
              :class="{ 'border-emerald-500': activity.completed }">
           <div class="flex items-center space-x-4">
             <button
-              @click="toggleStatus(activity.id)"
+              @click="toggleActivity(activity.id)"
               type="button"
               :class="[
                 'w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 z-10',
@@ -28,8 +27,10 @@
                   ? 'bg-emerald-500 border-0' 
                   : 'border-2 border-white/30 hover:border-amber-500'
               ]"
+              :disabled="isToggling(activity.id)"
             >
-              <span v-if="activity.completed" class="material-icons text-white text-sm">check</span>
+              <span v-if="activity.completed && !isToggling(activity.id)" class="material-icons text-white text-sm">check</span>
+              <span v-if="isToggling(activity.id)" class="material-icons text-white text-sm animate-spin">refresh</span>
             </button>
             <div>
               <span
@@ -52,8 +53,10 @@
             @click="deleteActivity(activity.id)"
             type="button"
             class="p-2 text-white/40 hover:text-red-400 rounded-lg hover:bg-red-400/10 transition-all duration-300 z-10"
+            :disabled="isDeleting(activity.id)"
           >
-            <span class="material-icons">delete</span>
+            <span v-if="!isDeleting(activity.id)" class="material-icons">delete</span>
+            <span v-else class="material-icons animate-spin">refresh</span>
           </button>
         </div>
       </div>
@@ -62,23 +65,39 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { computed } from 'vue'
+import { useActivityStore } from '@/stores/activityStore'
 
-defineProps({
+const props = defineProps({
   activities: {
     type: Array,
     required: true
   }
 })
 
-const emit = defineEmits(['toggle-status', 'delete-activity'])
+const activityStore = useActivityStore()
 
-const toggleStatus = (id) => {
-  emit('toggle-status', id)
+const isToggling = (id) => activityStore.isOperationPending(`toggle-${id}`)
+const isDeleting = (id) => activityStore.isOperationPending(`delete-${id}`)
+
+const toggleActivity = async (id) => {
+  if (!isToggling(id)) {
+    try {
+      await activityStore.toggleActivityStatus(id)
+    } catch (error) {
+      // Error is already handled in the store
+    }
+  }
 }
 
-const deleteActivity = (id) => {
-  emit('delete-activity', id)
+const deleteActivity = async (id) => {
+  if (!isDeleting(id)) {
+    try {
+      await activityStore.deleteActivity(id)
+    } catch (error) {
+      // Error is already handled in the store
+    }
+  }
 }
 
 const formatDate = (dateString) => {

@@ -10,43 +10,51 @@
         </div>
       </div>
       
-      <ActivityForm @add-activity="addActivity" />
+      <!-- Error message -->
+      <div v-if="activityStore.error" class="mb-6 bg-red-500/20 border border-red-500 text-white p-4 rounded-lg">
+        <div class="flex items-center">
+          <span class="material-icons mr-2">error</span>
+          <span>{{ activityStore.error }}</span>
+        </div>
+      </div>
+      
+      <ActivityForm />
       
       <div class="mt-10">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div class="flex items-center gap-3">
             <div class="bg-white/10 backdrop-blur-lg px-4 py-2 rounded-lg text-white">
-              <span class="font-medium">{{ pendingCount }}</span> pending
+              <span class="font-medium">{{ activityStore.pendingCount }}</span> pending
             </div>
             <div class="bg-white/10 backdrop-blur-lg px-4 py-2 rounded-lg text-white">
-              <span class="font-medium">{{ completedCount }}</span> completed
+              <span class="font-medium">{{ activityStore.completedCount }}</span> completed
             </div>
           </div>
           
           <div class="bg-white/5 backdrop-blur-lg rounded-lg p-1 flex">
             <button 
-              @click="filter = 'all'"
+              @click="activityStore.setFilter('all')"
               :class="[
                 'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300',
-                filter === 'all' ? 'bg-amber-500 text-slate-900' : 'text-white hover:bg-white/10'
+                activityStore.filter === 'all' ? 'bg-amber-500 text-slate-900' : 'text-white hover:bg-white/10'
               ]"
             >
               All
             </button>
             <button 
-              @click="filter = 'active'"
+              @click="activityStore.setFilter('active')"
               :class="[
                 'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300',
-                filter === 'active' ? 'bg-amber-500 text-slate-900' : 'text-white hover:bg-white/10'
+                activityStore.filter === 'active' ? 'bg-amber-500 text-slate-900' : 'text-white hover:bg-white/10'
               ]"
             >
               Active
             </button>
             <button 
-              @click="filter = 'completed'"
+              @click="activityStore.setFilter('completed')"
               :class="[
                 'px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300',
-                filter === 'completed' ? 'bg-amber-500 text-slate-900' : 'text-white hover:bg-white/10'
+                activityStore.filter === 'completed' ? 'bg-amber-500 text-slate-900' : 'text-white hover:bg-white/10'
               ]"
             >
               Completed
@@ -55,9 +63,7 @@
         </div>
         
         <ActivityList
-          :activities="filteredActivities"
-          @toggle-status="toggleActivityStatus"
-          @delete-activity="deleteActivity"
+          :activities="activityStore.filteredActivities"
         />
       </div>
     </div>
@@ -65,62 +71,18 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
+import { useActivityStore } from '@/stores/activityStore'
 import ActivityForm from '@/components/ActivityForm.vue'
 import ActivityList from '@/components/ActivityList.vue'
 
-const activities = ref([])
-const filter = ref('all')
+const activityStore = useActivityStore()
 
-const filteredActivities = computed(() => {
-  switch (filter.value) {
-    case 'active':
-      return activities.value.filter(a => !a.completed)
-    case 'completed':
-      return activities.value.filter(a => a.completed)
-    default:
-      return activities.value
+onMounted(async () => {
+  try {
+    await activityStore.fetchActivities()
+  } catch (error) {
+    // Error is already handled in the store
   }
-})
-
-const pendingCount = computed(() => activities.value.filter(a => !a.completed).length)
-const completedCount = computed(() => activities.value.filter(a => a.completed).length)
-
-const loadActivities = () => {
-  const stored = localStorage.getItem('activities')
-  if (stored) {
-    activities.value = JSON.parse(stored)
-  }
-}
-
-const saveActivities = () => {
-  localStorage.setItem('activities', JSON.stringify(activities.value))
-}
-
-const addActivity = (activity) => {
-  activities.value.unshift({
-    id: Date.now(),
-    title: activity,
-    completed: false,
-    createdAt: new Date().toISOString()
-  })
-  saveActivities()
-}
-
-const toggleActivityStatus = (id) => {
-  const activity = activities.value.find(a => a.id === id)
-  if (activity) {
-    activity.completed = !activity.completed
-    saveActivities()
-  }
-}
-
-const deleteActivity = (id) => {
-  activities.value = activities.value.filter(a => a.id !== id)
-  saveActivities()
-}
-
-onMounted(() => {
-  loadActivities()
 })
 </script>
